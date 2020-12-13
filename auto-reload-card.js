@@ -4,7 +4,7 @@ class AutoReloadCard extends HTMLElement {
 
 		const delay = this.config.delay_in_minute * 6e4;
 		
-		let sessionItem = sessionStorage.getItem('AutoReloadCardIntervalHandle');
+		let sessionItem = window.AutoReloadCardIntervalHandle;
 		if(sessionItem) {
 			const [previousPanelUrl, previousIntervalHandle] = sessionItem.split(':');
 			if(previousPanelUrl !== hass.panelUrl) {
@@ -34,7 +34,7 @@ class AutoReloadCard extends HTMLElement {
 					location.reload();
 				}
 			}, delay);
-			sessionStorage.setItem('AutoReloadCardIntervalHandle', `${hass.panelUrl}:${intervalHandle}`);
+			window.AutoReloadCardIntervalHandle = `${hass.panelUrl}:${intervalHandle}`;
 		}
 	}
 
