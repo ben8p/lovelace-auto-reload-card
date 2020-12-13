@@ -18,7 +18,7 @@ resources:
 
 ### Configuration example:
 
- - Redirect user "foo" to the 2nd tab if `input.binary.is_home` is `on`:
+ - Refresh lovelace every 1 minute:
 ```yaml
 type: 'custom:auto-reload-card'
 delay_in_minute: 1
