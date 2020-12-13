@@ -4,33 +4,38 @@ class AutoReloadCard extends HTMLElement {
 
 		const delay = this.config.delay_in_minute * 6e4;
 		
-		const previousIntervalHandle = sessionStorage.getItem('AutoReloadCardIntervalHandle');
-		if(previousIntervalHandle) {
-			clearInterval(previousIntervalHandle);
-		}
-
-		const intervalHandle = setInterval(() => {
-			const homeAssistant = document.querySelector('home-assistant');
-			const root = homeAssistant.shadowRoot.querySelector('home-assistant-main').shadowRoot;
-			const panel = root.querySelector('ha-panel-lovelace');
-			if(!panel) { return; }
-			const uiRoot = panel.shadowRoot.querySelector('hui-root');
-			if(!uiRoot) { return; }
-			const header = uiRoot.shadowRoot.querySelector('app-header');
-			const isEditing = header.classList.contains('edit-mode');
-			if(isEditing) { return; }
-		
-			const toolbar = uiRoot.shadowRoot.querySelector('app-toolbar');
-			const buttonMenu = toolbar.querySelector('ha-button-menu');
-			const refresh = buttonMenu.querySelector('[aria-label=Refresh]');
-		
-			if (refresh) {
-				refresh.click();
-			} else {
-				location.reload();
+		let sessionItem = sessionStorage.getItem('AutoReloadCardIntervalHandle');
+		if(sessionItem) {
+			const [previousPanelUrl, previousIntervalHandle] = sessionItem.split(':');
+			if(previousPanelUrl !== hass.panelUrl) {
+				clearInterval(previousIntervalHandle);
+				sessionItem = null;
 			}
-		}, delay);
-		sessionStorage.setItem('AutoReloadCardIntervalHandle', intervalHandle);
+		}
+		if(!sessionItem) {
+			const intervalHandle = setInterval(() => {
+				const homeAssistant = document.querySelector('home-assistant');
+				const root = homeAssistant.shadowRoot.querySelector('home-assistant-main').shadowRoot;
+				const panel = root.querySelector('ha-panel-lovelace');
+				if(!panel) { return; }
+				const uiRoot = panel.shadowRoot.querySelector('hui-root');
+				if(!uiRoot) { return; }
+				const header = uiRoot.shadowRoot.querySelector('app-header');
+				const isEditing = header.classList.contains('edit-mode');
+				if(isEditing) { return; }
+			
+				const toolbar = uiRoot.shadowRoot.querySelector('app-toolbar');
+				const buttonMenu = toolbar.querySelector('ha-button-menu');
+				const refresh = buttonMenu.querySelector('[aria-label=Refresh]');
+			
+				if (refresh) {
+					refresh.click();
+				} else {
+					location.reload();
+				}
+			}, delay);
+			sessionStorage.setItem('AutoReloadCardIntervalHandle', `${hass.panelUrl}:${intervalHandle}`);
+		}
 	}
 
 
