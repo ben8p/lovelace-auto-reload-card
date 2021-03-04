@@ -22,4 +22,5 @@ resources:
 ```yaml
 type: 'custom:auto-reload-card'
 delay_in_minute: 1
+redirect_page: ''(optional, defaults to current) (ex: '/lovelace/living-room')
 ```

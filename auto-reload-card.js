@@ -7,7 +7,7 @@ class AutoReloadCard extends HTMLElement {
 		let sessionItem = window.AutoReloadCardIntervalHandle;
 		if(sessionItem) {
 			const [previousPanelUrl, previousIntervalHandle] = sessionItem.split(':');
-			if(previousPanelUrl !== hass.panelUrl) {
+			if(previousPanelUrl !== hass.panelUrl && this.config.redirect_page == null) {
 				clearInterval(previousIntervalHandle);
 				sessionItem = null;
 			}
@@ -34,7 +34,10 @@ class AutoReloadCard extends HTMLElement {
 					location.reload();
 				}
 			}, delay);
-			window.AutoReloadCardIntervalHandle = `${hass.panelUrl}:${intervalHandle}`;
+            if(this.config.redirect_page == null)
+                window.AutoReloadCardIntervalHandle = `${hass.panelUrl}:${intervalHandle}`;
+            else
+                window.AutoReloadCardIntervalHandle = `${this.config.redirect_page}:${intervalHandle}`;
 		}
 	}
 
