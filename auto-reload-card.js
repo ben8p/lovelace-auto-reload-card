@@ -20,19 +20,10 @@ class AutoReloadCard extends HTMLElement {
 				if(!panel) { return; }
 				const uiRoot = panel.shadowRoot.querySelector('hui-root');
 				if(!uiRoot) { return; }
-				const header = uiRoot.shadowRoot.querySelector('app-header');
-				const isEditing = header.classList.contains('edit-mode');
-				if(isEditing) { return; }
-			
-				const toolbar = uiRoot.shadowRoot.querySelector('app-toolbar');
-				const buttonMenu = toolbar.querySelector('ha-button-menu');
-				const refresh = buttonMenu.querySelector('[aria-label=Refresh]');
-			
-				if (refresh) {
-					refresh.click();
-				} else {
-					location.reload();
-				}
+				const editMode = uiRoot.shadowRoot.querySelector('.edit-mode');
+				if(editMode) { return; }
+
+				location.reload();
 			}, delay);
 			window.AutoReloadCardIntervalHandle = `${hass.panelUrl}:${intervalHandle}`;
 		}
